@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct PracticeTextField: UIViewRepresentable {
-    func makeUIView(context: Context) -> some UIView {
+    @Binding var value: String
+    
+    func makeUIView(context: Context) -> UITextField {
         let textField = UITextField()
         textField.borderStyle = .line
         textField.delegate = context.coordinator
@@ -16,20 +18,30 @@ struct PracticeTextField: UIViewRepresentable {
         return textField
     }
     
-    func updateUIView(_ uiView: UIViewType, context: Context) {
-        
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        uiView.text = value
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator()
+        return Coordinator(value: $value)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
+        @Binding var value: String
+        
+        init(value: Binding<String>) {
+            self._value = value
+        }
+        
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             if string.isEmpty {
                 return true
             }
-            return Int(string) != nil
+            if Int(string) != nil {
+                value = textField.text ?? ""
+                return true
+            }
+            return false
         }
     }
 }

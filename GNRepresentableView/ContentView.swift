@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var value = ""
+    
     var body: some View {
         VStack {
-            PracticeTextField()
+            Text(value)
+            PracticeTextField(value: $value)
         }
     }
 }
